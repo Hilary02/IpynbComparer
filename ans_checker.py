@@ -24,6 +24,9 @@ SUBMIT
 {% endblock header %}
 
 {% block in_prompt %}
+INPUT```
+{{cell.source}}
+```
 {%- endblock in_prompt %}
 
 {% block output_prompt %}
@@ -135,9 +138,9 @@ def make_block(f_queue):
         line = f_queue.popleft()
 
         if line == "INPUT```":
-            block_dict["input"] = read_input(f_queue)
+            block_dict["input"] += read_input(f_queue)
         if line == "OUTPUT```":
-            block_dict["output"] = read_output(f_queue)
+            block_dict["output"] += read_output(f_queue)
         if line == "BLOCK":
             f_queue.appendleft(line)
             break

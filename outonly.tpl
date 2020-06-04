@@ -5,6 +5,9 @@ SUBMIT
 {% endblock header %}
 
 {% block in_prompt %}
+INPUT```
+{{cell.source}}
+```
 {%- endblock in_prompt %}
 
 {% block output_prompt %}
