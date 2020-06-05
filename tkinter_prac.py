@@ -3,6 +3,26 @@ import tkinter.filedialog
 import json
 
 
+def file_select_f1():
+    origin_file = tk.filedialog.askopenfilename(
+        filetypes=[("Jupyter", "*.ipynb"), ("Json", "*.json")], initialdir="./")
+
+    if origin_file == "":
+        print("ファイル未入力")
+    file_name = origin_file.split("/")[-1]
+    f1la1["text"] = f"ファイル名：{file_name}"
+
+
+def file_select_f2():
+    origin_file = tk.filedialog.askopenfilename(
+        filetypes=[("", "*.ipynb", ".json")], initialdir="./")
+
+    if origin_file == "":
+        print("ファイル未入力")
+    file_name = origin_file.split("/")[-1]
+    f2la1["text"] = f"ファイル名：{file_name}"
+
+
 def kadai_selected(event):
     for i in selector.curselection():
         print(selector.get(i))
@@ -19,17 +39,22 @@ root.title("nbcompare")
 root.geometry("1200x600")
 
 # 左課題表示画面
-f1 = tk.Frame(root, relief=tk.RIDGE, bd=2)
-l1 = tk.Label(f1, text="text", bg="SeaGreen", font=('Helvetica', '16'))
-l1.pack(side=tk.TOP)
-la1 = tk.Label(f1, text="コード")
-la1.pack(side=tk.TOP)
-l2 = tk.Label(f1, text="text", bg="yellow", font=('Helvetica', '16'))
-l2.pack(side=tk.TOP)
-la2 = tk.Text(f1, padx=5, pady=5)
-la2.pack(side=tk.TOP)
-l3 = tk.Label(f1, text="text", bg="magenta", font=('Helvetica', '16'))
-l3.pack(side=tk.TOP)
+f1 = tk.Frame(root, relief=tk.GROOVE, bd=2)
+f1la1 = tk.Label(f1, text="ファイル名")
+f1la1.grid(row=0, column=0, padx=2, pady=2, sticky=tk.N + tk.W)
+# ボタン
+f1bt1 = tkinter.Button(f1, text="ファイル選択", command=file_select_f1)
+f1bt1.grid(row=0, column=1, padx=2, pady=2, sticky=tk.N + tk.E)
+
+f1la2 = tk.Label(f1, text="コード")
+f1la2.grid(row=1, column=0, padx=2, pady=2, columnspan=2, sticky=tk.W)
+f1tx1 = tk.Text(f1, padx=5, pady=5, width=60, height=15, font=('Consolas', 11))
+f1tx1.grid(row=2, column=0, padx=2, pady=2, columnspan=2)
+f1la3 = tk.Label(f1, text="出力")
+f1la3.grid(row=3, column=0, padx=2, pady=2, columnspan=2, sticky=tk.W)
+f1tx2 = tk.Text(f1, padx=5, pady=5, width=50, height=8, font=('Consolas', 12))
+f1tx2.grid(row=4, column=0, padx=2, pady=2, columnspan=2, sticky=tk.N + tk.W)
+
 f1.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
 
 
@@ -38,6 +63,9 @@ f2 = tk.Frame(root, relief=tk.GROOVE, bd=2)
 f2la1 = tk.Label(f2, text="ファイル名")
 f2la1.grid(row=0, column=0, padx=2, pady=2, sticky=tk.N + tk.W)
 # ボタン
+f2bt1 = tkinter.Button(f2, text="ファイル選択", command=file_select_f2)
+f2bt1.grid(row=0, column=1, padx=2, pady=2, sticky=tk.N + tk.E)
+
 f2la2 = tk.Label(f2, text="コード")
 f2la2.grid(row=1, column=0, padx=2, pady=2, columnspan=2, sticky=tk.W)
 f2tx1 = tk.Text(f2, padx=5, pady=5, width=60, height=15, font=('Consolas', 11))
