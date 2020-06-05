@@ -18,7 +18,7 @@ def read_output(f):
         if l == "":
             # 空行は無視
             continue
-        s += l+"\n"
+        s += l.rstrip(" ")+"\n"
     return s
 
 
