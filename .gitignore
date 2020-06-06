@@ -1,0 +1,6 @@
+# Byte-compiled files
+__pycache__/
+
+# 独自
+modelanswer.json
+*.tpl
