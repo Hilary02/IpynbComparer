@@ -169,10 +169,19 @@ def kadai_selected(event):
     if len(selector.curselection()) == 0:
         return
     i = selector.curselection()
+
+    if not left_data:
+        log("左側のデータが未選択")
+        return
+
     f1tx1.delete("1.0", "end")
     f1tx1.insert("end", left_data[selector.get(i)]["input"])
     f1tx2.delete("1.0", "end")
     f1tx2.insert("end", left_data[selector.get(i)]["output"])
+
+    if not right_data:
+        log("右側のデータが未選択")
+        return
 
     f2tx1.delete("1.0", "end")
     f2tx1.insert("end", right_data[selector.get(i)]["input"])
@@ -281,7 +290,7 @@ if __name__ == "__main__":
 
     # 初回入力処理
     if not os.path.isfile("./modelanswer.json"):
-        log("模範回答データを選択してください")
+        log("模範回答データがありません")
         make_model_data()
 
     # 自動読み込み
