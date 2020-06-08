@@ -7,6 +7,7 @@ import make_dict
 
 left_data = None
 right_data = None
+debug = False
 
 
 def log(s):
@@ -91,6 +92,9 @@ unknown type  {{ cell.type }}
                            file_path, "--template=outonly.tpl", "--stdout"], stdout=subprocess.PIPE)
 
     convert_out = proc.stdout.decode("utf8")
+
+    if debug:
+        print(convert_out)
     if "SUBMIT" in convert_out:
         return True, convert_out.split("\n")
     else:
