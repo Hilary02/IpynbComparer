@@ -8,6 +8,7 @@ import make_dict
 left_data = None
 right_data = None
 debug = False
+now_select = ""
 
 
 def log(s):
@@ -165,6 +166,19 @@ def file_select_f2():
         log("読み込み失敗")
 
 
+def model_update():
+    global now_select
+    with open("./modelanswer.json", mode="r", encoding="utf-8") as f:
+        tmp_model = json.load(f)
+
+        tmp_model[now_select]["input"] = f1tx1.get("1.0", "end")
+        tmp_model[now_select]["output"] = f1tx2.get("1.0", "end")
+
+    with open("./modelanswer.json", mode="w", encoding="utf-8") as f:
+        json.dump(tmp_model, f, indent=4, ensure_ascii=False)
+        log("modelanswer.jsonを左のデータで更新しました")
+
+
 def selector_reset():
     for i in range(selector.size()):
         selector.delete(tk.END)
@@ -190,6 +204,8 @@ def kadai_selected(event):
         log("右側のデータが未選択")
         return
 
+    global now_select
+    now_select = selector.get(i)  # 保存
     f2tx1.delete("1.0", "end")
     f2tx1.insert("end", right_data[selector.get(i)]["input"])
     f2tx2.delete("1.0", "end")
@@ -293,6 +309,8 @@ if __name__ == "__main__":
     logarea = tk.Text(f3, padx=5, pady=5, width=30,
                       height=20, font=('Consolas', 9))
     logarea.pack(side=tk.TOP)
+    f3bt1 = tkinter.Button(f3, text="左の内容でmodelを更新(仮)", command=model_update)
+    f3bt1.pack(side=tk.TOP, fill=tk.X, expand=0)
     f3.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
 
     # 初回入力処理
