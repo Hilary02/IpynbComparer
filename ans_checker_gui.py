@@ -91,7 +91,7 @@ unknown type  {{ cell.type }}
                            file_path, "--template=outonly.tpl", "--stdout"], stdout=subprocess.PIPE)
 
     convert_out = proc.stdout.decode("utf8")
-    if convert_out[:6] == "SUBMIT":
+    if "SUBMIT" in convert_out:
         return True, convert_out.split("\n")
     else:
         return False, []
@@ -118,9 +118,12 @@ def make_model_data():
         filetypes=[("模範解答", "*.ipynb")], initialdir="./")
 
     model_dict = selectfile2dict(file_path)
-    with open("./modelanswer.json", mode="w", encoding="utf-8") as f:
-        json.dump(model_dict, f, indent=4, ensure_ascii=False)
-        log("modelanswer.jsonを保存しました")
+    if not model_dict:
+        log("模範解答の処理に失敗しました")
+    else:
+        with open("./modelanswer.json", mode="w", encoding="utf-8") as f:
+            json.dump(model_dict, f, indent=4, ensure_ascii=False)
+            log("modelanswer.jsonを保存しました")
 
 
 def file_select_f1():
