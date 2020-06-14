@@ -1,4 +1,96 @@
+import os
+import subprocess
 from collections import deque
+
+
+class IpynbSpliter():
+
+    @staticmethod
+    def split(file_path):
+        """
+        引数に渡されたipynbを行ごとに分割して返す
+        ipynbが処理できないとFalseを返す
+        """
+
+        # 初回テンプレート作成
+        if not os.path.isfile("outonly.tpl"):
+            with open("./outonly.tpl", mode="w", encoding="utf-8") as f:
+                data = """
+{% extends 'display_priority.tpl' %}
+{%- block header -%}
+SUBMIT
+{% endblock header %}
+
+{% block in_prompt %}
+INPUT```
+{{cell.source}}
+```
+{%- endblock in_prompt %}
+
+{% block output_prompt %}
+{%- endblock output_prompt %}
+
+{%- block input %}
+{% endblock input %}
+
+{% block error %}
+{% endblock error %}
+
+{% block traceback_line %}
+{{ line | indent | strip_ansi }}
+{% endblock traceback_line %}
+
+{% block execute_result %}
+{% block data_priority scoped %}
+{{ super() }}
+{%- endblock %}
+{%- endblock execute_result%}
+
+{% block stream %}
+OUTPUT```
+{{output.text}}
+```
+{% endblock stream %}
+
+{% block data_text scoped %}
+OUTPUT```
+{{ output.data['text/plain']  }}
+```
+{% endblock data_text %}
+
+{% block markdowncell scoped %}
+{%- if "課題" in cell.source.split("\\n")[0] -%}
+BLOCK
+{{cell.source.split("\\n")[0]}}
+{% endif %}
+{%- endblock markdowncell %}
+
+
+
+{% block data_html scoped %}
+{{ output.data['text/html'] }}
+{% endblock data_html %}
+
+{% block data_markdown scoped %}
+{{ output.data['text/markdown'] }}
+{% endblock data_markdown %}
+
+{% block unknowncell scoped %}
+unknown type  {{ cell.type }}
+{% endblock unknowncell %}
+                """
+                f.write(data)
+
+        # 変換処理
+        proc = subprocess.run(["jupyter", "nbconvert", "--to", "markdown",
+                               file_path, "--template=outonly.tpl", "--stdout"], stdout=subprocess.PIPE)
+
+        convert_out = proc.stdout.decode("utf8")
+
+        if "SUBMIT" in convert_out:
+            return True, convert_out.split("\n")
+        else:
+            return False, []
 
 
 class DictConverter():
