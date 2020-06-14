@@ -3,7 +3,7 @@ import tkinter as tk
 import tkinter.filedialog
 import json
 import subprocess
-import make_dict
+from make_dict import DictConverter
 
 left_data = None
 right_data = None
@@ -107,7 +107,7 @@ def selectfile2dict(file_path):
         b, split_li = ipynb2splitlist(file_path)
         if b == False:
             return False
-        kadai_dict = make_dict.make_dict(split_li)
+        kadai_dict = DictConverter.convert(split_li)
         return kadai_dict
 
     elif os.path.splitext(file_path)[-1] == ".json":

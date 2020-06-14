@@ -1,63 +1,66 @@
 from collections import deque
 
 
-def read_input(f):
-    s = ""
-    for l in f:
-        if l == "```":
-            break
-        s += l+"\n"
-    return s
+class DictConverter():
+    @staticmethod
+    def get_input(f):
+        s = ""
+        for l in f:
+            if l == "```":
+                break
+            s += l+"\n"
+        return s
 
+    @staticmethod
+    def get_output(f):
+        s = ""
+        for l in f:
+            if l == "```":
+                break
+            if l == "":
+                # 空行は無視
+                continue
+            s += l.rstrip(" ")+"\n"
+        return s
 
-def read_output(f):
-    s = ""
-    for l in f:
-        if l == "```":
-            break
-        if l == "":
-            # 空行は無視
-            continue
-        s += l.rstrip(" ")+"\n"
-    return s
+    @staticmethod
+    def make_block(f_queue):
+        block_dict = {"input": "", "output": ""}
+        # inputを取得
+        while True:
+            if not f_queue:
+                break
+            line = f_queue.popleft()
 
+            if line == "INPUT```":
+                block_dict["input"] += DictConverter.get_input(f_queue)
+            if line == "OUTPUT```":
+                block_dict["output"] += DictConverter.get_output(f_queue)
+            if line == "BLOCK":
+                f_queue.appendleft(line)
+                break
 
-def make_block(f_queue):
-    block_dict = {"input": "", "output": ""}
-    # inputを取得
-    while True:
-        if not f_queue:
-            break
-        line = f_queue.popleft()
+        return block_dict
 
-        if line == "INPUT```":
-            block_dict["input"] += read_input(f_queue)
-        if line == "OUTPUT```":
-            block_dict["output"] += read_output(f_queue)
-        if line == "BLOCK":
-            f_queue.appendleft(line)
-            break
+    @staticmethod
+    def convert(conv_data):
+        """
+        スプリットされたデータから辞書を作成
+        """
+        problem_dict = dict()
+        f_queue = deque(conv_data)
 
-    return block_dict
+        while True:
+            if not f_queue:
+                break
+            line = f_queue.popleft()
 
-# 入力データから入出力データを作成
+            if line == "\n":
+                continue
+            if line == "BLOCK":
+                # 課題ブロックの作成
+                title = f_queue.popleft()
+                block_dict = DictConverter.make_block(f_queue)
 
-
-def make_dict(conv_data):
-    input_dict = dict()
-    f_queue = deque(conv_data)
-
-    while True:
-        if not f_queue:
-            break
-        line = f_queue.popleft()
-
-        if line == "\n":
-            continue
-        if line == "BLOCK":
-            # 課題ブロックの作成
-            title = f_queue.popleft()
-            block_dict = make_block(f_queue)
-
-            input_dict[title] = block_dict
-    return input_dict
+                problem_dict[title] = block_dict
+        return problem_dict
