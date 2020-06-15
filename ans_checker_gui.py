@@ -111,6 +111,25 @@ def kadai_selected(event):
     f2tx2.insert("end", right_data[selector.get(i)]["output"])
 
 
+def strip_margin(s):
+    """
+    文字列の各行から空白，空行などを除去した文字列を返す
+    """
+    strip_str = ""
+    for l in s.split("\n"):
+        strip_line = l.strip(" '\"")
+        if strip_line:
+            strip_str += l.strip(" '\"") + "\n"
+
+    return strip_str
+
+
+def loose_compare(str1, str2):
+    strip_str1 = strip_margin(str1)
+    strip_str2 = strip_margin(str2)
+    return strip_str1 == strip_str2
+
+
 def compare():
     if not left_data or not right_data:
         return False
@@ -123,8 +142,7 @@ def compare():
 
     try:
         for i, k in enumerate(keys):
-            if left_data[k]["output"] == right_data[k]["output"]:
-                # 柔軟な比較ができるか？
+            if loose_compare(left_data[k]["output"], right_data[k]["output"]):
                 match_num += 1
                 match_list[i] = True
     except Exception as e:
