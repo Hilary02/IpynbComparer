@@ -70,6 +70,8 @@ def model_update():
 
         tmp_model[now_select]["input"] = f1tx1.get("1.0", "end-1c")
         tmp_model[now_select]["output"] = f1tx2.get("1.0", "end-1c")
+        left_data[now_select]["input"] = f1tx1.get("1.0", "end-1c")
+        left_data[now_select]["output"] = f1tx2.get("1.0", "end-1c")
 
     with open("./modelanswer.json", mode="w", encoding="utf-8") as f:
         json.dump(tmp_model, f, indent=4, ensure_ascii=False)
