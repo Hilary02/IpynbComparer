@@ -66,13 +66,13 @@ def compare(data1, data2, is_strict):
 
 def parser():
     argparser = ArgumentParser(
-        prog=__file__, usage="python %(prog)s fname [--model <file>] [--help]")
+        prog=__file__, usage="python %(prog)s fname [--model <file>] [--help] [--strict]")
     argparser.add_argument("fname", type=str, help="比較対象ファイル[.ipynb]")
     argparser.add_argument("-m", "--model", type=str,
                            dest="model_file", help="模範解答ファイル[.ipynb | .json] 未入力のとき前回のものと比較")
     argparser.add_argument("-s", "--strict",
                            action="store_true",
-                           help="回答を文字の完全一致で比較")
+                           help="回答を文字の完全一致で比較 default:空白や空行を無視")
 
     args = argparser.parse_args()
 
