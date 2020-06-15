@@ -14,27 +14,12 @@ def log(s):
     logarea.insert("end", f"{s}\n")
 
 
-def selectfile2dict(file_path):
-    if os.path.splitext(file_path)[-1] == ".ipynb":
-        b, split_li = IpynbSpliter.split(file_path)
-        if b == False:
-            return False
-        kadai_dict = DictConverter.convert(split_li)
-        return kadai_dict
-
-    elif os.path.splitext(file_path)[-1] == ".json":
-        with open(file_path, mode="r", encoding="utf-8") as f:
-            kadai_dict = json.load(f)
-        return kadai_dict
-    return False
-
-
 def make_model_data():
     log("模範解答を選択してください")
     file_path = tk.filedialog.askopenfilename(
         filetypes=[("模範解答", "*.ipynb")], initialdir="./")
 
-    model_dict = selectfile2dict(file_path)
+    model_dict = ProblemFileReader.makedict(file_path)
     if not model_dict:
         log("模範解答の処理に失敗しました")
     else:
@@ -48,7 +33,7 @@ def file_select_f1():
     log("左に表示するデータを選択")
     file_path = tk.filedialog.askopenfilename(
         filetypes=[("Jupyter", "*.ipynb"), ("Json", "*.json")], initialdir="./")
-    kadai_dict = selectfile2dict(file_path)
+    kadai_dict = ProblemFileReader.makedict(file_path)
 
     if kadai_dict:
         file_name = file_path.split("/")[-1]
@@ -66,7 +51,7 @@ def file_select_f2():
     log("右に表示するデータを選択")
     file_path = tk.filedialog.askopenfilename(
         filetypes=[("Jupyter", "*.ipynb"), ("Json", "*.json")], initialdir="./")
-    kadai_dict = selectfile2dict(file_path)
+    kadai_dict = ProblemFileReader.makedict(file_path)
 
     if kadai_dict:
         file_name = file_path.split("/")[-1]

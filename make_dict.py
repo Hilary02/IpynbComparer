@@ -1,12 +1,16 @@
 import os
 import subprocess
 from collections import deque
+import json
 
 
-class IpynbSpliter():
+class ProblemFileReader():
+    """
+    課題ファイルを読み込み，課題とその回答部分を抜き出して返す
+    """
 
     @staticmethod
-    def split(file_path):
+    def split_ipynb(file_path):
         """
         引数に渡されたipynbを行ごとに分割して返す
         ipynbが処理できないとFalseを返す
@@ -92,8 +96,29 @@ unknown type  {{ cell.type }}
         else:
             return False, []
 
+    @staticmethod
+    def makedict(file_path):
+        """
+        ipynbまたはjsonを読み込み，辞書形式にして返す
+        """
+        if os.path.splitext(file_path)[-1] == ".ipynb":
+            b, splited_prob = ProblemFileReader.split_ipynb(file_path)
+            if b == False:
+                return False
+            problem_dict = DictConverter.convert(splited_prob)
+            return problem_dict
+
+        elif os.path.splitext(file_path)[-1] == ".json":
+            with open(file_path, mode="r", encoding="utf-8") as f:
+                problem_dict = json.load(f)
+            return problem_dict
+        return False
+
 
 class DictConverter():
+    """
+    課題と回答が抽出されたリストを解析して辞書型にまとめる
+    """
     @staticmethod
     def get_input(f):
         s = ""
