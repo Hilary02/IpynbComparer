@@ -100,6 +100,7 @@ unknown type  {{ cell.type }}
     def makedict(file_path):
         """
         ipynbまたはjsonを読み込み，辞書形式にして返す
+        jsonならそのまま辞書に．ipynbは一度変換してから処理．
         """
         if os.path.splitext(file_path)[-1] == ".ipynb":
             b, splited_prob = ProblemFileReader.split_ipynb(file_path)
